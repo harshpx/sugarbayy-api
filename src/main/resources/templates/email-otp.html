@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Verify your email</title>
+    </head>
+    <body style="height: 100%; width: 100%; margin: 0; padding: 0;">
+        <div style="padding: 20px;">
+            <img src="https://www.sugarbayy.in/sugarbayy-logo.png" alt="SugarBayy Logo" style="width: 300px; height: auto;"/>
+            <div style="font-size: 20px; margin-bottom: 5px;">Hi <b>Customer</b>,</div>
+            <div style="font-weight: bold; font-size: 25px; margin-bottom: 20px;">Welcome to Sugarbayy!</div>
+            <div style="margin-bottom: 10px;">Your OTP for login / email verification is:&nbsp;</div>
+            <div
+             style="font-weight: bold; letter-spacing: 8px; font-size: 40px; width: 100%; text-align: center; padding: 5px; background: lightpink; border-radius: 12px; margin-bottom: 10px;"
+             th:text="${otp}">
+                123456
+            </div>
+            <div style="display: flex; font-style: italic; margin-bottom: 30px;">
+                <span>(This code is only valid until&nbsp;</span>
+                <span style="font-weight: bold" th:text="${expiryMinutes}">10</span>
+                <span>&nbsp;minutes)</span>
+            </div>
+            <div style="gap: 2px;">
+                <div>Regards,</div>
+                <div style="font-style: italic">Team Sugarbayy</div>
+            </div>
+        </div>
+    </body>
+</html>

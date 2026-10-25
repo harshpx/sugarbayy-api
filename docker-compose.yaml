@@ -1,0 +1,17 @@
+name: sugarbayy
+services:
+  api:
+    image: sugarbayy-api:latest
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    ports:
+      - "8087:8087"
+    env_file:
+      - secrets.env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75.0 -XX:InitialRAMPercentage=25.0"
+    mem_limit: 768m
+    cpus: 1.0
+    restart: unless-stopped

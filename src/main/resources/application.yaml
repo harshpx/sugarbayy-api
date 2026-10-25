@@ -1,0 +1,27 @@
+server:
+  port: 8087
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: sugarbayy
+  datasource:
+    url: ${JDBC_DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 0
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      validation-timeout: 5000
+  security:
+    oauth2.client:
+      registration:
+        google:
+          client-id: ${GOOGLE_CLIENT_ID}
+          client-secret: ${GOOGLE_CLIENT_SECRET}
+jwt:
+  secret: ${JWT_SECRET}
+email:
+  api-key: ${EMAIL_API_KEY}
