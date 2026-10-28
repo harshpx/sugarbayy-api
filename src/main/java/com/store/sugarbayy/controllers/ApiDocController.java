@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 import org.springframework.ui.Model;
 
 public interface ApiDocController {
-    public String loginPage(String error, Model model, HttpServletResponse response);
-    public String sendOtp(String email, Model model, HttpServletResponse response);
-    public String emailLogin(@ValidEmail String email, @Size(min = 6, max = 6) String otp, Model model, HttpServletResponse response);
-    public String credentialLogin(@ValidEmail String email, String password, Model model, HttpServletResponse response);
+    String loginPage(String error, Model model, HttpServletResponse response);
+    String sendOtp(String email, Model model, HttpServletResponse response);
+    String emailLogin(@ValidEmail String email, @Size(min = 6, max = 6) String otp, Model model, HttpServletResponse response);
+    String credentialLogin(@ValidEmail String email, String password, Model model, HttpServletResponse response);
 }
