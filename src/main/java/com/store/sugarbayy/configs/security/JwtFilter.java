@@ -37,11 +37,19 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws IOException {
         try {
-            // check public endpoint
+            String requestUri = request.getRequestURI();
             String requestEndpoint = request.getServletPath();
-            String path = request.getRequestURI();
-            log.info("jwtFilter_request_endpoint:{}", requestEndpoint);
-            log.info("jwtFilter_path:{}", path);
+            String contextPath = request.getContextPath();
+
+            // check public endpoint
+            log.info(
+                    "JWT debug: uri={}, servletPath={}, contextPath={}, publicByUri={}, publicByServletPath={}",
+                    requestUri,
+                    requestEndpoint,
+                    contextPath,
+                    Common.isPublicEndpoint(requestUri),
+                    Common.isPublicEndpoint(requestEndpoint)
+            );
             if (Common.isPublicEndpoint(requestEndpoint)) {
                 filterChain.doFilter(request, response);
                 return;
