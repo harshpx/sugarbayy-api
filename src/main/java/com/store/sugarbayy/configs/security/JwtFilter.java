@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
     ) throws IOException {
         try {
             // check public endpoint
-            String requestEndpoint = request.getRequestURI();
+            String requestEndpoint = request.getServletPath();
             if (Common.isPublicEndpoint(requestEndpoint)) {
                 filterChain.doFilter(request, response);
                 return;
