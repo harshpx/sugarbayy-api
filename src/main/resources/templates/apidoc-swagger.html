@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+
+  <title>SugarBayy API Documentation</title>
+
+  <link rel="stylesheet" href="/swagger-ui/swagger-ui.css">
+
+  <style>
+    #swagger-exit {
+      position: fixed;
+      z-index: 1000;
+      top: 12px;
+      right: 20px;
+      padding: 9px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<button id="swagger-exit" type="button">Exit Swagger</button>
+
+<div id="swagger-ui"></div>
+
+<script src="/swagger-ui/swagger-ui-bundle.js"></script>
+<script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
+
+<script th:inline="javascript">
+  (() => {
+    let accessToken = /*[[${accessToken}]]*/ "";
+
+    if (!accessToken) {
+      window.location.replace("/auth/admin/apidoc/login/");
+      return;
+    }
+
+    // A refresh now requests the guarded Swagger entry endpoint.
+    window.history.replaceState(
+            null,
+            "",
+            "/swagger-ui/index.html"
+    );
+
+    document.getElementById("swagger-exit").addEventListener(
+            "click",
+            () => {
+              accessToken = "";
+              window.location.replace(
+                      "/auth/admin/apidoc/login/"
+              );
+            }
+    );
+
+    window.addEventListener("pageshow", event => {
+      if (event.persisted) {
+        accessToken = "";
+        window.location.replace(
+                "/auth/admin/apidoc/login/"
+        );
+      }
+    });
+
+    window.ui = SwaggerUIBundle({
+      url: "/v3/api-docs",
+      dom_id: "#swagger-ui",
+      deepLinking: true,
+
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
+
+      layout: "StandaloneLayout",
+
+      requestInterceptor: request => {
+        const target = new URL(request.url, window.location.origin);
+
+        // Never leak the admin token to an external server.
+        if (target.origin === window.location.origin) {
+          request.headers = request.headers || {};
+          request.headers.Authorization =
+                  "Bearer " + accessToken;
+        }
+
+        return request;
+      }
+    });
+  })();
+</script>
+</body>
+</html>

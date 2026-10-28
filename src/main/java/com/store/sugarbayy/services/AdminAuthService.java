@@ -5,7 +5,9 @@ import com.store.sugarbayy.dtos.LoginRequest;
 import com.store.sugarbayy.dtos.TokenResponse;
 
 public interface AdminAuthService {
-    TokenResponse adminCredentialLogin(LoginRequest loginRequest);
     void sendAdminEmailLoginOtp(String email);
     TokenResponse adminEmailOtpLogin(EmailOtpRequest emailOtpRequest);
+    String adminEmailOtpLoginNoRefresh(EmailOtpRequest emailOtpRequest);
+    TokenResponse adminCredentialLogin(LoginRequest loginRequest);
+    String adminCredentialLoginNoRefresh(LoginRequest loginRequest);
 }

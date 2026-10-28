@@ -1,6 +1,6 @@
 spring:
   app:
-    allowed-clients: "https://www.sugarbayy.in, https://admin.sugarbayy.in"
+    allowed-clients: "https://www.sugarbayy.in, https://admin.sugarbayy.in, https://api.sugarbayy.in"
   jpa:
     hibernate:
       ddl-auto: none

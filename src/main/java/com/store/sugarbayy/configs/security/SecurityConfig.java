@@ -19,25 +19,29 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 public class SecurityConfig {
+    private final CorsConfigurationSource corsConfigurationSource;
+    private final JwtFilter jwtFilter;
     private final UserDetailsService adminUserDetailsService;
     private final UserDetailsService customerUserDetailsService;
-    private final JwtFilter jwtFilter;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
 
     public SecurityConfig(
+            CorsConfigurationSource corsConfigurationSource,
+            JwtFilter jwtFilter,
             @Qualifier("adminUserDetailsService") UserDetailsService adminUserDetailsService,
             @Qualifier("customerUserDetailsService") UserDetailsService customerUserDetailsService,
-            JwtFilter jwtFilter,
             AuthenticationSuccessHandler authenticationSuccessHandler,
             AuthenticationFailureHandler authenticationFailureHandler
     ) {
+        this.corsConfigurationSource = corsConfigurationSource;
+        this.jwtFilter = jwtFilter;
         this.adminUserDetailsService = adminUserDetailsService;
         this.customerUserDetailsService = customerUserDetailsService;
-        this.jwtFilter = jwtFilter;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
     }
@@ -46,11 +50,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity https) {
         return https
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(req -> req
                         .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
-                        .requestMatchers(Common.PUBLIC_ENDPOINTS)
-                        .permitAll().anyRequest().authenticated())
+                        .requestMatchers(Common.ADMIN_ENDPOINTS).hasRole("ADMIN")
+                        .requestMatchers(Common.PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

@@ -9,7 +9,8 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 public class Common {
-    public static final String[] PUBLIC_ENDPOINTS = {"/", "/auth/**"};
+    public static final String[] ADMIN_ENDPOINTS = {"/v3/api-docs", "/v3/api-docs/**", "/v3/api-docs.yaml"};
+    public static final String[] PUBLIC_ENDPOINTS = {"/", "/auth/**", "/swagger-ui.html", "/swagger-ui/**"};
     public static final String DELIMITER = "\u001F";
 
     public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder(10);
