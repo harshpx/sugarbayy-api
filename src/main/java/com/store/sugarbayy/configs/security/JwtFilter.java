@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Set;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -37,6 +39,9 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             // check public endpoint
             String requestEndpoint = request.getServletPath();
+            String path = request.getRequestURI();
+            log.info("jwtFilter_request_endpoint:{}", requestEndpoint);
+            log.info("jwtFilter_path:{}", path);
             if (Common.isPublicEndpoint(requestEndpoint)) {
                 filterChain.doFilter(request, response);
                 return;
