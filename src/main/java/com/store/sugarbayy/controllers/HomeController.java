@@ -1,6 +1,6 @@
 package com.store.sugarbayy.controllers;
 
-import com.store.sugarbayy.dtos.SuccessResponse;
+import com.store.sugarbayy.dtos.common.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

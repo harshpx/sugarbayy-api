@@ -5,6 +5,8 @@ import com.store.sugarbayy.enums.VerificationTokenType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.Instant;
 
@@ -13,6 +15,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @Builder
+@DynamicInsert
+@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 public class VerificationToken {
