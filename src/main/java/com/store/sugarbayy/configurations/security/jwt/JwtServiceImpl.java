@@ -40,14 +40,4 @@ public class JwtServiceImpl implements JwtService {
     public Claims extractClaims(String token) throws JwtException {
         return Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token).getPayload();
     }
-
-    @Override
-    public boolean isTokenValid(String token) {
-        try {
-            extractClaims(token);
-            return true;
-        } catch (JwtException e) {
-            return false;
-        }
-    }
 }

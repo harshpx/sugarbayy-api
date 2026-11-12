@@ -3,7 +3,6 @@ package com.store.sugarbayy.configurations.exceptions;
 import com.store.sugarbayy.dtos.common.ErrorResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintDeclarationException;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;

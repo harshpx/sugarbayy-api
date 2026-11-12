@@ -1,6 +1,5 @@
 package com.store.sugarbayy.dtos.product;
 
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 

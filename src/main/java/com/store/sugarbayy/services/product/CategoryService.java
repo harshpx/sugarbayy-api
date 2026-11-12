@@ -1,6 +1,5 @@
 package com.store.sugarbayy.services.product;
 
-import com.store.sugarbayy.dtos.common.IdNameObject;
 import com.store.sugarbayy.dtos.product.CategoryInfo;
 
 import java.util.List;
