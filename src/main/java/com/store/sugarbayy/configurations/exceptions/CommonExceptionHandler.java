@@ -14,6 +14,7 @@ import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -74,6 +75,7 @@ public class CommonExceptionHandler {
             IllegalArgumentException.class,
             HttpRequestMethodNotSupportedException.class,
             HttpMessageNotReadableException.class,
+            HttpMediaTypeException.class,
             MethodArgumentTypeMismatchException.class,
             DataIntegrityViolationException.class,
     })

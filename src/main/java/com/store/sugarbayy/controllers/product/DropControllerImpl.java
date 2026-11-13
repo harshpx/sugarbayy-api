@@ -37,10 +37,10 @@ public class DropControllerImpl implements DropController {
     }
 
     @Override
-    @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SuccessResponse<DropInfo>> modifyProductDrop(
-            @RequestBody @Valid @ModelAttribute DropModifyRequest request,
+            @ModelAttribute @Valid DropModifyRequest request,
             @PathVariable(name = "id") Long id
     ) {
         var data = dropService.updateDrop(request, id);

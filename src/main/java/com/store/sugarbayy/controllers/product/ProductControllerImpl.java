@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +31,9 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse<ProductInfo>> addNewProduct(
-            @RequestBody @Valid ProductModifyRequest request
+            @ModelAttribute @Valid ProductModifyRequest request
     ) {
         var data = productService.addProduct(request);
         return ResponseEntity.ok(SuccessResponse.of(data));
@@ -40,12 +41,24 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{productId}")
+    @PostMapping(value = "/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse<ProductInfo>> modifyProduct(
-            @RequestBody @Valid ProductModifyRequest request,
+            @ModelAttribute @Valid ProductModifyRequest request,
             @PathVariable(name = "productId") Long productId
     ) {
         var data = productService.updateProduct(request, productId);
         return ResponseEntity.ok(SuccessResponse.of(data));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<SuccessResponse<String>> deleteProduct(@PathVariable(name = "productId") Long productId) {
+        int deleteCount = productService.deleteProduct(productId);
+        return ResponseEntity.ok(
+                deleteCount > 0
+                        ? new SuccessResponse<>("Product drop deleted successfully")
+                        : new SuccessResponse<>(false, "Product drop delete unsuccessful, may not exist")
+        );
     }
 }

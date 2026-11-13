@@ -7,6 +7,7 @@ public record DropModifyRequest(
         @NotBlank(message = "Product drop must have a name")
         String name,
         String description,
-        MultipartFile coverPhoto
+        MultipartFile coverPhoto,
+        Boolean deleteCoverPhoto
 ) {
 }

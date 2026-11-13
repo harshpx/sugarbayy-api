@@ -29,48 +29,51 @@ public class DropServiceImpl implements DropService {
     @Override
     @Transactional
     public DropInfo createDrop(DropModifyRequest request) {
+        // check duplicate name
         if (dropRepo.existsByNameIgnoreCase(request.name())) {
             throw new ApiException("Drop with name: " + request.name().toLowerCase() + " already exists", HttpStatus.CONFLICT);
         }
 
-        String cleanedName = Common.toSentenceCase(request.name());
-        String cleanedDescription = Common.toSentenceCase(request.description());
-
+        // build new drop without multipart content keys & persist
         ProductDrop drop = ProductDrop.builder()
-                .name(cleanedName)
-                .description(cleanedDescription)
+                .name(Common.toSentenceCase(request.name()))
+                .description(Common.toSentenceCase(request.description()))
                 .build();
 
         drop = dropRepo.save(drop);
 
+        // handle multipart files upload & set keys to drop
         if (request.coverPhoto() != null && !request.coverPhoto().isEmpty()) {
-            String imageKey = imageStorageService.uploadImage(request.coverPhoto(), drop);
-            drop.setCoverPhoto(imageKey);
-
+            List<String> imageKey = imageStorageService.uploadImages(drop, request.coverPhoto());
             imageStorageService.registerImageCleanup(imageKey, null);
+            drop.setCoverPhoto(imageKey.getFirst());
         }
+
         return DropInfo.fromEntity(drop);
     }
 
     @Override
     @Transactional
     public DropInfo updateDrop(DropModifyRequest request, Long dropId) {
+        // check existing
         ProductDrop existingDrop = dropRepo.findById(dropId)
                 .orElseThrow(() -> new ApiException("Product drop does not exist", HttpStatus.NOT_FOUND));
 
-        String cleanedName = Common.toSentenceCase(request.name());
-        String cleanedDescription = Common.toSentenceCase(request.description());
+        // update all fields except multipart ones
+        existingDrop.setName(Common.toSentenceCase(request.name()));
+        existingDrop.setDescription(Common.toSentenceCase(request.description()));
 
-        existingDrop.setName(cleanedName);
-        existingDrop.setDescription(cleanedDescription);
-
+        // handle multipart files update
         MultipartFile newPhoto = request.coverPhoto();
+        String oldImageKey = existingDrop.getCoverPhoto();
 
         if (newPhoto != null && !newPhoto.isEmpty()) {
-            String oldImageKey = existingDrop.getCoverPhoto();
-            String newImageKey = imageStorageService.uploadImage(request.coverPhoto(), existingDrop);
-            existingDrop.setCoverPhoto(newImageKey);
-            imageStorageService.registerImageCleanup(newImageKey, oldImageKey);
+            List<String> newImageKey = imageStorageService.uploadImages(existingDrop, request.coverPhoto());
+            imageStorageService.registerImageCleanup(newImageKey, oldImageKey == null ? null : List.of(oldImageKey));
+            existingDrop.setCoverPhoto(newImageKey.getFirst());
+        } else if (Boolean.TRUE.equals(request.deleteCoverPhoto())) {
+            imageStorageService.registerImageCleanup(null, oldImageKey == null ? null : List.of(oldImageKey));
+            existingDrop.setCoverPhoto(null);
         }
 
         return DropInfo.fromEntity(existingDrop);
@@ -84,7 +87,7 @@ public class DropServiceImpl implements DropService {
         String imageKey = existingDrop.getCoverPhoto();
         dropRepo.delete(existingDrop);
         if (imageKey != null) {
-            imageStorageService.registerImageCleanup(null, imageKey);
+            imageStorageService.registerImageCleanup(null, List.of(imageKey));
         }
         return 1;
     }

@@ -9,4 +9,5 @@ public interface ProductService {
     Page<ProductInfo> getProducts(Pageable pageable);
     ProductInfo addProduct(ProductModifyRequest request);
     ProductInfo updateProduct(ProductModifyRequest request, Long ProductId);
+    int deleteProduct(Long productId);
 }

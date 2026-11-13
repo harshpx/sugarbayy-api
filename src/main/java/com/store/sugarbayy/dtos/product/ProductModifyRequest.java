@@ -2,6 +2,7 @@ package com.store.sugarbayy.dtos.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,7 +12,8 @@ public record ProductModifyRequest(
         String description,
         Long categoryId,
         Long dropId,
-        List<String> images,
+        List<MultipartFile> images,
+        List<String> imagesToDelete,
         @Positive
         int stockQuantity,
         @Positive

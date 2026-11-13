@@ -11,4 +11,5 @@ public interface ProductController {
     ResponseEntity<SuccessResponse<Page<ProductInfo>>> listProducts(Pageable pageable);
     ResponseEntity<SuccessResponse<ProductInfo>> addNewProduct(ProductModifyRequest request);
     ResponseEntity<SuccessResponse<ProductInfo>> modifyProduct(ProductModifyRequest request, Long productId);
+    ResponseEntity<SuccessResponse<String>> deleteProduct(Long productId);
 }
